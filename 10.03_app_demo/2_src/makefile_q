@@ -28,7 +28,7 @@ PRUSS_DRV_LIB = $(PRU_PACKAGE_ROOT)/bin-bbb/libprussdrv.a
 # -static: do not use shared libs, include all code into the binary
 # (big binary, but BBB needs no shared libs of certain versions installed)
 # Example: demo binary goes from 594K to 12.3MB !
-LDFLAGS+= -static -lstdc++ -lpthread $(PRUSS_DRV_LIB)
+LDFLAGS+= -static -lstdc++ -lpthread -lz -lm $(PRUSS_DRV_LIB)
 
 # compiler flags and libraries
 ifeq ($(MAKE_CONFIGURATION),RELEASE)
@@ -53,7 +53,7 @@ endif
 
 
 CCFLAGS= \
-	-std=c++11     \
+	-std=c++14     \
 	-fmax-errors=3     \
 	-I$(PRUSS_INCLUDE_DIR)	\
 	-I.	\
@@ -105,6 +105,7 @@ OBJECTS = $(OBJDIR)/application.o	\
 	$(OBJDIR)/cpu.o	\
 	$(OBJDIR)/ka11.o	\
 	$(OBJDIR)/rl0102.o	\
+	$(OBJDIR)/delqa.o	\
     $(OBJDIR)/rl11.o	\
     $(OBJDIR)/rk11.o        \
     $(OBJDIR)/rk05.o        \
@@ -256,6 +257,9 @@ $(OBJDIR)/devexer_rl.o :  $(DEVEXER_SRC_DIR)/devexer_rl.cpp $(DEVEXER_SRC_DIR)/d
 
 $(OBJDIR)/cpu.o :  $(DEVICE_SRC_DIR)/cpu.cpp $(DEVICE_SRC_DIR)/cpu.hpp
 	$(CC) $(CCFLAGS) $< -o $@
+
+$(OBJDIR)/delqa.o :  $(DEVICE_SRC_DIR)/delqa.cpp $(DEVICE_SRC_DIR)/delqa.hpp
+	$(CC) $(CCFLAGS) -Wno-missing-field-initializers $< -o $@
 
 $(OBJDIR)/ka11.o :  $(DEVICE_SRC_DIR)/cpu20/ka11.c $(DEVICE_SRC_DIR)/cpu20/ka11.h
 	$(CC) $(CCFLAGS) -x c++ -Wno-parentheses $< -o $@

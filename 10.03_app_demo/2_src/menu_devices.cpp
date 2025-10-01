@@ -23,6 +23,7 @@
  16-Nov-2018  JH      created
  16-Oct-2022  MR      Copied the "m lt file" option from other menu to here
  27-Feb-2023  JD/JH   RS11/RF11 new. KE11 EAE for UNIBUS.
+ 25-Aug-2025  JST     DELQA for QBUS.
  */
 
 #include <stdio.h>
@@ -61,6 +62,9 @@
 #include "uda.hpp"
 #include "dl11w.hpp"
 #include "ke11.hpp"
+#if defined(QBUS)
+#include "delqa.hpp"
+#endif
 #if defined(UNIBUS)
 #include "m9312.hpp"
 #endif
@@ -234,6 +238,9 @@ void application_c::menu_devices(const char *menu_code, bool with_emulated_CPU)
 #endif
     //	//demo_regs.install();
     //	//demo_regs.worker_start();
+#if defined (QBUS)
+    delqa_c *DELQA = new delqa_c();
+#endif
 
 
 
@@ -657,6 +664,11 @@ void application_c::menu_devices(const char *menu_code, bool with_emulated_CPU)
     KE11A->enabled.set(false);
     delete KE11A;
 
+#endif
+
+#if defined(QBUS)
+    DELQA->enabled.set(false) ;
+    delete DELQA;
 #endif
 
     RX11->enabled.set(false) ;
